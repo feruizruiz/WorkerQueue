@@ -28,9 +28,9 @@ dynamodb = boto3.resource('dynamodb', region_name='us-east-2', aws_access_key_id
                           aws_secret_access_key='3cgioxny3gb0bMABAWU+0vjEKoU9JSTi9v1u3u8M')
 videos_table = dynamodb.Table('videos')
 bucket = s3.Bucket(aws.S3_Config.AWS_STORAGE_BUCKET_NAME)
-print aws.S3_Config.AWS_S3_CUSTOM_DOMAIN
-for obj in bucket.objects.all():
-    print(obj)
+##print aws.S3_Config.AWS_S3_CUSTOM_DOMAIN
+##for obj in bucket.objects.all():
+##    print(obj)
 
 EMAIL_HOST = 'email-smtp.us-east-1.amazonaws.com'
 EMAIL_HOST_USER = 'AKIAIQZGD2J6YKE5DJ6A'
@@ -48,12 +48,12 @@ for message in queue.receive_messages(MessageAttributeNames=[
     path = message.message_attributes.get('path').get('StringValue')
     idVideo = message.message_attributes.get('idVideo').get('StringValue')
     idCompetition= message.message_attributes.get('idCompetition').get('StringValue')
-    email = "grupo2cloud@gmail.com"
+    email = message.message_attributes.get('email').get('StringValue')
     nameFile =path[23:]
     name,extension = nameFile.split('.')
     pathFile = 'media/videos/converted/'+name+'.mp4'
     print  "name  "+name+" namefile "+nameFile+"\n"
-    print "  path "+path+" idVideo  "+idVideo+" idCompetition "+idCompetition+"\n"
+    print "  path "+path+" idVideo  "+idVideo+" idCompetition "+idCompetition+" email "+email+"\n"
     print " cuepo "+message.body
     bucket.download_file(path, './tmp/'+nameFile) ;
     os.system("ffmpeg -i " + './tmp/'+nameFile+ " " +'./conv/'+name+'.mp4')
@@ -114,8 +114,12 @@ for message in queue.receive_messages(MessageAttributeNames=[
     serverSMTP.starttls()
     serverSMTP.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
     serverSMTP.sendmail(emisor, receptor, mensaje.as_string())
+
+    ## boorro temporales :
+    os.system("del " + './tmp/' + nameFile)
+    os.system("del "+ './conv/' + name + '.mp4')
     contador = contador + 1
-    #message.delete()
+    message.delete()
     print ("********** video" + str(contador) + "**********")
 
 tiempo_final = time()
