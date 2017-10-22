@@ -83,14 +83,14 @@ for message in queue.receive_messages(MessageAttributeNames=[
     # Configuracion del mail
     html = "<th>Estado Publicacion Video </th>"
     html += "<table>"
-    html += "<tr><td><font color='red'> Apreciado usuario " + name + " :</font> </td></tr>"
+    html += "<tr><td><font color='red'> Apreciado usuario " + email + " :</font> </td></tr>"
     html += "<tr><td><font color='blue'> El video Ya se encuentra publicado <br></font></td></tr>"
     html += "<tr><td><b><font color='red'>Grupo 2 Cloud Computer 201702 </font><b></td></tr>"
     html += "</table>"
     mensaje = MIMEText(html, 'html')
     mensaje['From'] = emisor
     mensaje['To'] = ', '.join(receptor)
-    mensaje['Subject'] = "Notificacion Publicacion  Video " + name
+    mensaje['Subject'] = "Notificacion Publicacion  Video " + email
     # Nos conectamos al servidor SMTP de Gmail
     serverSMTP = smtplib.SMTP(EMAIL_HOST, EMAIL_PORT)
     # serverSMTP.ehlo()
@@ -101,7 +101,7 @@ for message in queue.receive_messages(MessageAttributeNames=[
     # Configuracion del mail
     html = "<th>Estado Publicacion Video </th>"
     html += "<table>"
-    html += "<tr><td><font color='red'> Apreciado usuario " + name + " :</font> </td></tr>"
+    html += "<tr><td><font color='red'> Apreciado usuario " + email + " :</font> </td></tr>"
     html += "<tr><td><font color='blue'> El video Ya se encuentra publicado <br></font></td></tr>"
     html += "<tr><td><b><font color='red'>Grupo 2 Cloud Computer 201702 </font><b></td></tr>"
     html += "</table>"
@@ -116,8 +116,8 @@ for message in queue.receive_messages(MessageAttributeNames=[
     serverSMTP.sendmail(emisor, receptor, mensaje.as_string())
 
     ## boorro temporales :
-    os.system("del " + './tmp/' + nameFile)
-    os.system("del "+ './conv/' + name + '.mp4')
+    os.system("rm " + './tmp/' + nameFile)
+    os.system("rm "+ './conv/' + name + '.mp4')
     contador = contador + 1
     message.delete()
     print ("********** video" + str(contador) + "**********")
