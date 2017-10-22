@@ -1,0 +1,28 @@
+DYNAMO_RESOURCE = 'dynamodb'
+REGION_NAME='us-east-2'
+USER_ID_DYNAMODB ='AKIAIGNQ6QGQCSAOMINA'
+SECRET_ACCESS_KEY_DYNAMODB  = '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'
+
+#names for Competition table
+COMPETITIONS = 'Competitions'
+ADMIN_USER_ATTR = 'adminUser'
+GUID_COMPETITION_ATTR = 'guidCompetition'
+URL_ATTR = 'urlCompetition'
+NAME_ATTR = 'nameCompetition'
+START_DATE_ATTR = 'startDate'
+END_DATE_ATTR ='endDate'
+DESC_ATTR = 'awardDescription'
+BANNER_ATTR = 'pathBanner'
+
+#names for videos table
+VIDEOS = 'videos'
+GUID_VIDEO_ATTR = 'guidVideo'
+GUID_COMPETITION_BY_VIDEO_ATTR = 'guidCompetition'
+CREATION_DATE_ATTR = 'creationDate'
+EMAIL_USER_ATTR = 'emailUser'
+NAME_USER_ATTR = 'name'
+LAST_NAME_ATTR = 'lastName'
+PATH_ORIGINAL_ATTR = 'pathOriginal'
+PATH_CONVERTED_ATTR ='pathConverted'
+MESSAGE_ATTR= 'message'
+STATE_ATTR = 'videoState'
