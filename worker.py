@@ -98,22 +98,6 @@ for message in queue.receive_messages(MessageAttributeNames=[
     # serverSMTP.ehlo()
     serverSMTP.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
     serverSMTP.sendmail(emisor, receptor, mensaje.as_string())
-    # Configuracion del mail
-    html = "<th>Estado Publicacion Video </th>"
-    html += "<table>"
-    html += "<tr><td><font color='red'> Apreciado usuario " + email + " :</font> </td></tr>"
-    html += "<tr><td><font color='blue'> El video Ya se encuentra publicado <br></font></td></tr>"
-    html += "<tr><td><b><font color='red'>Grupo 2 Cloud Computer 201702 </font><b></td></tr>"
-    html += "</table>"
-    mensaje = MIMEText(html, 'html')
-    mensaje['From'] = emisor
-    mensaje['To'] = ', '.join(receptor)
-    mensaje['Subject'] = "Notificacion Publicacion  Video " + name
-    # Nos conectamos al servidor SMTP de Gmail
-    serverSMTP = smtplib.SMTP(EMAIL_HOST, EMAIL_PORT)
-    serverSMTP.starttls()
-    serverSMTP.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
-    serverSMTP.sendmail(emisor, receptor, mensaje.as_string())
 
     ## boorro temporales :
     os.system("rm " + './tmp/' + nameFile)
