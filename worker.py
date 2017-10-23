@@ -57,10 +57,12 @@ for message in queue.receive_messages(MessageAttributeNames=[
     print " cuepo "+message.body
     bucket.download_file(path, './tmp/'+nameFile) ;
     os.system("ffmpeg -i " + './tmp/'+nameFile+ " " +'./conv/'+name+'.mp4')
+    file = open('./conv/'+name+'.mp4', "rb")
+    #file.read()
     bucket.put_object(
        ACL='public-read',  # TODO Revisar
        Key=pathFile,
-       Body='./conv/'+name+'.mp4'
+       Body=file
     )
 
     response = videos_table.update_item(
