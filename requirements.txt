@@ -1,12 +1,4 @@
 boto==2.39.0
-dj-database-url==0.4.1
-Django==1.9.7
-django-bootstrap3==8.1.0
-django-boto==0.3.9
-django-heroku-postgresify==0.4
-django-s3-folder-storage==0.3
-django-storages==1.4
-djangorestframework==3.6.2
 gunicorn==19.6.0
 olefile==0.44
 pbr==1.10.0
