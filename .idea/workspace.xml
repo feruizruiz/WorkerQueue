@@ -2,7 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="09c3fb22-a2c0-40de-b5c1-814d32d9b003" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Procfile" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/conv/098c7f5fe6fa47dbb3cebc17bc1262a5.mp4" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/conv/5311f9e31b2146e9842e8720a65b0c1c.mp4" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/conv/549e88b06d2046029287409dc7dfe8e5.mp4" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/conv/7be356496d774c76b3f0dfae42f0f751.mp4" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/conv/b02e6696e7af432f828d834896da0a88.mp4" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/tmp/098c7f5fe6fa47dbb3cebc17bc1262a5.WebM" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/tmp/5311f9e31b2146e9842e8720a65b0c1c.WebM" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/tmp/549e88b06d2046029287409dc7dfe8e5.WebM" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/tmp/7be356496d774c76b3f0dfae42f0f751.mov" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/tmp/b02e6696e7af432f828d834896da0a88.WebM" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -383,7 +392,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1378" height="744" extended-state="1" />
+    <frame x="-8" y="-8" width="1378" height="744" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29514417" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
