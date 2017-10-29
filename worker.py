@@ -1,4 +1,4 @@
-print "Responde"
+print ("Responde")
 import boto3
 from botocore.client import Config
 import aws.QSQConfig
@@ -52,9 +52,9 @@ for message in queue.receive_messages(MessageAttributeNames=[
     nameFile =path[23:]
     name,extension = nameFile.split('.')
     pathFile = 'media/videos/converted/'+name+'.mp4'
-    print  "name  "+name+" namefile "+nameFile+"\n"
-    print "  path "+path+" idVideo  "+idVideo+" idCompetition "+idCompetition+" email "+email+"\n"
-    print " cuepo "+message.body
+    print ("name  "+name+" namefile "+nameFile+"\n")
+    print ("path "+path+" idVideo  "+idVideo+" idCompetition "+idCompetition+" email "+email+"\n")
+    print (" cuepo "+message.body)
     bucket.download_file(path, './tmp/'+nameFile) ;
     os.system("ffmpeg -i " + './tmp/'+nameFile+ " " +'./conv/'+name+'.mp4')
     file = open('./conv/'+name+'.mp4', "rb")
