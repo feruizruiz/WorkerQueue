@@ -12,6 +12,7 @@ import smtplib
 import ffmpy
 from time import time
 
+
 sqs = boto3.resource(
     aws.QSQConfig.QUEUE,
     aws_access_key_id=aws.QSQConfig.QUEUE_ACCESS_KEY,
@@ -40,80 +41,81 @@ EMAIL_PORT = 587
 tiempo_inicial = time()
 contador = 0
 
-queue = sqs.get_queue_by_name(QueueName='QueueVideo.fifo')
-for message in queue.receive_messages(MessageAttributeNames=[
-        'All',
-    ]):
-    path = message.message_attributes.get('path').get('StringValue')
-    idVideo = message.message_attributes.get('idVideo').get('StringValue')
-    idCompetition= message.message_attributes.get('idCompetition').get('StringValue')
-    email = message.message_attributes.get('email').get('StringValue')
-    nameFile =path[23:]
-    name,extension = nameFile.split('.')
-    pathFile = 'media/videos/converted/'+name+'.mp4'
-    print ("name  "+name+" namefile "+nameFile+"\n")
-    print ("path "+path+" idVideo  "+idVideo+" idCompetition "+idCompetition+" email "+email+"\n")
-    print (" cuepo "+message.body)
-    bucket.download_file(path, './tmp/'+nameFile) ;
-    #os.system("ffmpeg -i " + './tmp/'+nameFile+ " " +'./conv/'+name+'.mp4')
-    ff = ffmpy.FFmpeg(
-        inputs={'./tmp/'+nameFile: None},
-        outputs={'./conv/'+name+'.mp4': None}
-    )
-    ff.run()
+while True :
+    queue = sqs.get_queue_by_name(QueueName='QueueVideo.fifo')
+    for message in queue.receive_messages(MessageAttributeNames=[
+            'All',
+        ]):
+        path = message.message_attributes.get('path').get('StringValue')
+        idVideo = message.message_attributes.get('idVideo').get('StringValue')
+        idCompetition= message.message_attributes.get('idCompetition').get('StringValue')
+        email = message.message_attributes.get('email').get('StringValue')
+        nameFile =path[23:]
+        name,extension = nameFile.split('.')
+        pathFile = 'media/videos/converted/'+name+'.mp4'
+        print ("name  "+name+" namefile "+nameFile+"\n")
+        print ("path "+path+" idVideo  "+idVideo+" idCompetition "+idCompetition+" email "+email+"\n")
+        print (" cuepo "+message.body)
+        bucket.download_file(path, './tmp/'+nameFile) ;
+        #os.system("ffmpeg -i " + './tmp/'+nameFile+ " " +'./conv/'+name+'.mp4')
+        ff = ffmpy.FFmpeg(
+            inputs={'./tmp/'+nameFile: None},
+            outputs={'./conv/'+name+'.mp4': None}
+        )
+        ff.run()
 
-    file = open('./conv/'+name+'.mp4', "rb")
-    #file.read()
-    bucket.put_object(
-       ACL='public-read',  # TODO Revisar
-       Key=pathFile,
-       Body=file
-    )
+        file = open('./conv/'+name+'.mp4', "rb")
+        #file.read()
+        bucket.put_object(
+           ACL='public-read',  # TODO Revisar
+           Key=pathFile,
+           Body=file
+        )
 
-    response = videos_table.update_item(
-        Key={
-            'guidCompetition': idCompetition,
-            'guidVideo': idVideo
-        },
-        UpdateExpression='SET pathConverted = :pc, videoState = :st',
-        ExpressionAttributeValues={
-            ':pc': pathFile,
-            ':st': '1'
-        }
-    )
+        response = videos_table.update_item(
+            Key={
+                'guidCompetition': idCompetition,
+                'guidVideo': idVideo
+            },
+            UpdateExpression='SET pathConverted = :pc, videoState = :st',
+            ExpressionAttributeValues={
+                ':pc': pathFile,
+                ':st': '1'
+            }
+        )
 
-    ######ENVIO MENSAJE #################
-    destinatarios = ["Usuario  <" + email + ">"]
-    emisor = "grupo2cloud@gmail.com"
-    receptor = destinatarios
+        ######ENVIO MENSAJE #################
+        destinatarios = ["Usuario  <" + email + ">"]
+        emisor = "grupo2cloud@gmail.com"
+        receptor = destinatarios
 
-    # Configuracion del mail
-    html = "<th>Estado Publicacion Video </th>"
-    html += "<table>"
-    html += "<tr><td><font color='red'> Apreciado usuario " + email + " :</font> </td></tr>"
-    html += "<tr><td><font color='blue'> El video Ya se encuentra publicado <br></font></td></tr>"
-    html += "<tr><td><b><font color='red'>Grupo 2 Cloud Computer 201702 </font><b></td></tr>"
-    html += "</table>"
-    mensaje = MIMEText(html, 'html')
-    mensaje['From'] = emisor
-    mensaje['To'] = ', '.join(receptor)
-    mensaje['Subject'] = "Notificacion Publicacion  Video " + email
-    # Nos conectamos al servidor SMTP de Gmail
-    serverSMTP = smtplib.SMTP(EMAIL_HOST, EMAIL_PORT)
-    # serverSMTP.ehlo()
-    serverSMTP.starttls()
-    # serverSMTP.ehlo()
-    serverSMTP.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
-    serverSMTP.sendmail(emisor, receptor, mensaje.as_string())
+        # Configuracion del mail
+        html = "<th>Estado Publicacion Video </th>"
+        html += "<table>"
+        html += "<tr><td><font color='red'> Apreciado usuario " + email + " :</font> </td></tr>"
+        html += "<tr><td><font color='blue'> El video Ya se encuentra publicado <br></font></td></tr>"
+        html += "<tr><td><b><font color='red'>Grupo 2 Cloud Computer 201702 </font><b></td></tr>"
+        html += "</table>"
+        mensaje = MIMEText(html, 'html')
+        mensaje['From'] = emisor
+        mensaje['To'] = ', '.join(receptor)
+        mensaje['Subject'] = "Notificacion Publicacion  Video " + email
+        # Nos conectamos al servidor SMTP de Gmail
+        serverSMTP = smtplib.SMTP(EMAIL_HOST, EMAIL_PORT)
+        # serverSMTP.ehlo()
+        serverSMTP.starttls()
+        # serverSMTP.ehlo()
+        serverSMTP.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
+        serverSMTP.sendmail(emisor, receptor, mensaje.as_string())
 
-    ## boorro temporales :
-    os.system("rm " + './tmp/' + nameFile)
-    os.system("rm "+ './conv/' + name + '.mp4')
-    contador = contador + 1
-    message.delete()
-    print ("********** video" + str(contador) + "**********")
+        ## boorro temporales :
+        os.system("rm " + './tmp/' + nameFile)
+        os.system("rm "+ './conv/' + name + '.mp4')
+        contador = contador + 1
+        message.delete()
+        print ("********** video" + str(contador) + "**********")
 
-tiempo_final = time()
-tiempo_ejecucion = tiempo_final - tiempo_inicial
-print ("**********   numero de videos "+str(contador)+" tiempo "+str(tiempo_ejecucion))
-
+    tiempo_final = time()
+    tiempo_ejecucion = tiempo_final - tiempo_inicial
+    print ("**********   numero de videos "+str(contador)+" tiempo "+str(tiempo_ejecucion))
+    #time.sleep(5)
