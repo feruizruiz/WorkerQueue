@@ -9,6 +9,7 @@ import os
 from email.mime.text import MIMEText
 from smtplib import SMTP
 import smtplib
+import ffmpy
 from time import time
 
 sqs = boto3.resource(
@@ -28,9 +29,7 @@ dynamodb = boto3.resource('dynamodb', region_name='us-east-2', aws_access_key_id
                           aws_secret_access_key='3cgioxny3gb0bMABAWU+0vjEKoU9JSTi9v1u3u8M')
 videos_table = dynamodb.Table('videos')
 bucket = s3.Bucket(aws.S3_Config.AWS_STORAGE_BUCKET_NAME)
-##print aws.S3_Config.AWS_S3_CUSTOM_DOMAIN
-##for obj in bucket.objects.all():
-##    print(obj)
+
 
 EMAIL_HOST = 'email-smtp.us-east-1.amazonaws.com'
 EMAIL_HOST_USER = 'AKIAIQZGD2J6YKE5DJ6A'
@@ -56,7 +55,13 @@ for message in queue.receive_messages(MessageAttributeNames=[
     print ("path "+path+" idVideo  "+idVideo+" idCompetition "+idCompetition+" email "+email+"\n")
     print (" cuepo "+message.body)
     bucket.download_file(path, './tmp/'+nameFile) ;
-    os.system("ffmpeg -i " + './tmp/'+nameFile+ " " +'./conv/'+name+'.mp4')
+    #os.system("ffmpeg -i " + './tmp/'+nameFile+ " " +'./conv/'+name+'.mp4')
+    ff = ffmpy.FFmpeg(
+        inputs={'./tmp/'+nameFile: None},
+        outputs={'./conv/'+name+'.mp4': None}
+    )
+    ff.run()
+
     file = open('./conv/'+name+'.mp4', "rb")
     #file.read()
     bucket.put_object(
@@ -111,3 +116,4 @@ for message in queue.receive_messages(MessageAttributeNames=[
 tiempo_final = time()
 tiempo_ejecucion = tiempo_final - tiempo_inicial
 print ("**********   numero de videos "+str(contador)+" tiempo "+str(tiempo_ejecucion))
+
